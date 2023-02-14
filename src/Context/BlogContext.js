@@ -1,11 +1,17 @@
+import { call } from "react-native-reanimated";
 import createDataContext from "./createDataContext.js";
 
 
 const blogReducer = (state, action) => {
 switch (action.type){
-  case 'edit_blogpost':
-    return state.map((b)=>{
-      return b.id === action.payload.id ? action.payload : b;
+  case "edit_blogpost":
+    return state.map((blogPost) => {
+      // if(blogPost.id === action.payload.id) {
+      //   return action.payload
+      // } else{
+      //   return blogPost
+      // }
+      return blogPost.id === action.payload.id ? action.payload : blogPost;
     })
   case "remove_blogpost":
     return state.filter((b) => b.id !== action.payload)
@@ -30,11 +36,17 @@ switch (action.type){
       dispatch({type: "remove_blogpost", payload: id})
     }
   }
-  const editBlogPost = dispatch => {
-    return (title, content, id) => {
+  const editBlogPost = (dispatch) => {
+    return (id, title, content, callback) => {
+      console.log(id, title, content)
       dispatch({
-        type:'edit_blogpost', 
-        payload: {id, title, content}})
+        type:"edit_blogpost", 
+        payload: {id, title, content}
+      });
+      // NOTE this is a check for a callback because there could come a time when we choose to call this function but not change pages
+      if(callback){
+        callback();
+      }
     }
   }
 
